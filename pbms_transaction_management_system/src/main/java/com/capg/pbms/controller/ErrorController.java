@@ -1,0 +1,35 @@
+package com.capg.pbms.controller;
+
+import java.util.Date;
+import javax.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.capg.pbms.Exception.InsufficientBalanceException;
+import com.capg.pbms.Exception.InvalidAccountNumberException;
+import com.capg.pbms.model.ErrorResponse;
+
+
+
+@RestController
+@ControllerAdvice
+public class ErrorController {
+
+	@ResponseStatus(code = HttpStatus.NOT_FOUND)
+	@ExceptionHandler(InvalidAccountNumberException.class)
+	public ErrorResponse handleInvalidAccountNumberException(HttpServletRequest req)
+	{
+		return new ErrorResponse(new Date(),"Invalid Account Number", HttpStatus.NOT_FOUND.getReasonPhrase(), HttpStatus.NOT_FOUND.value(), req.getRequestURI());
+	}
+	
+	
+	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(InsufficientBalanceException.class)
+	public ErrorResponse handleInSufficientAmountException(HttpServletRequest req)
+	{
+		return new ErrorResponse(new Date(),"Insufficient Balance", HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(), req.getRequestURI());
+	}
+}
